@@ -80,4 +80,23 @@ foreach ($relativePath in $files) {
 
     if ($file -like '*.ps1') {
         $text = [IO.File]::ReadAllText($file)
-        $signatureStart = $text.IndexOf('
+        $signatureStart = $text.IndexOf('# SIG # Begin signature block')
+        if ($signatureStart -ge 0) {
+            $text = $text.Substring(0, $signatureStart).TrimEnd() + "`r`n"
+            [IO.File]::WriteAllText($file, $text, (New-Object System.Text.UTF8Encoding($true)))
+        }
+    }
+
+    try {
+        $result = Set-AuthenticodeSignature -FilePath $file -Certificate $cert -HashAlgorithm SHA256 -TimestampServer $TimestampServer -ErrorAction Stop
+    } catch {
+        Write-SignLog ("$relativePath : zaman damgasi kullanilamadi, damgasiz imza deneniyor")
+        $result = Set-AuthenticodeSignature -FilePath $file -Certificate $cert -HashAlgorithm SHA256 -ErrorAction Stop
+    }
+    if ($result.Status -notin @('Valid', 'UnknownError')) {
+        throw "$relativePath imza durumu: $($result.Status) - $($result.StatusMessage)"
+    }
+    Write-SignLog ("$relativePath : $($result.Status)")
+}
+
+Write-SignLog 'Imzalama tamamlandi.'
