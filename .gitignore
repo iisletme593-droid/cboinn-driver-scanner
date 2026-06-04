@@ -1,0 +1,22 @@
+# Runtime data
+state/
+DriverBackups/
+*.log
+
+# Generated binaries and release packages
+CboinnDriverScanner.exe
+Setup.exe
+PCGuncelleyici.exe
+publisher.cer
+release/
+setupbuild/*.exe
+setupbuild/*.manifest
+setupbuild/AssemblyInfo.cs
+setupbuild/PayloadHashes.cs
+
+# Local launchers and editor files
+*.lnk
+.vs/
+.vscode/
+*.user
+*.suo
