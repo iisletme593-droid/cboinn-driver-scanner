@@ -20,3 +20,6 @@ setupbuild/PayloadHashes.cs
 .vscode/
 *.user
 *.suo
+
+# Inno Setup build output
+release-inno/
