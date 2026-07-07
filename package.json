@@ -1,0 +1,73 @@
+{
+  "name": "cboinn-driver-scanner",
+  "version": "4.6.1",
+  "description": "Cboinn Driver Scanner — sürücü ve program güncelleyici (modern masaüstü sürümü)",
+  "author": "Cboinn",
+  "license": "MIT",
+  "main": "electron/main.js",
+  "scripts": {
+    "dev:vite": "vite",
+    "build": "vite build",
+    "start": "electron .",
+    "preview": "vite preview",
+    "pack": "vite build && electron-builder --win --dir",
+    "dist": "vite build && electron-builder --win",
+    "test": "powershell -ExecutionPolicy Bypass -File engine/run-tests.ps1",
+    "test:engine": "powershell -ExecutionPolicy Bypass -File engine/run-tests.ps1"
+  },
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-window": "^1.8.10"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "@types/react-window": "^1.8.8",
+    "@vitejs/plugin-react": "^4.3.4",
+    "autoprefixer": "^10.4.20",
+    "electron": "^33.2.1",
+    "electron-builder": "^25.1.8",
+    "png-to-ico": "^3.0.1",
+    "postcss": "^8.4.49",
+    "tailwindcss": "^3.4.17",
+    "typescript": "^5.7.2",
+    "vite": "^5.4.11"
+  },
+  "build": {
+    "appId": "com.cboinn.driverscanner",
+    "productName": "Cboinn Driver Scanner",
+    "directories": {
+      "output": "release-build",
+      "buildResources": "build"
+    },
+    "files": [
+      "dist/**/*",
+      "electron/**/*"
+    ],
+    "extraResources": [
+      {
+        "from": "engine",
+        "to": "engine"
+      },
+      {
+        "from": "build/icon.ico",
+        "to": "build/icon.ico"
+      }
+    ],
+    "win": {
+      "target": [
+        "nsis"
+      ],
+      "icon": "build/icon.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Cboinn Driver Scanner"
+    }
+  }
+}

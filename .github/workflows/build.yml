@@ -1,0 +1,41 @@
+name: Build & Test
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: TypeScript type check
+        run: npx tsc --noEmit
+
+      - name: Engine tests
+        shell: pwsh
+        run: pwsh -ExecutionPolicy Bypass -File engine/run-tests.ps1
+
+      - name: Build renderer (vite)
+        run: npm run build
+
+      - name: Package (unpacked)
+        run: npx electron-builder --win --dir
+
+      - name: Upload unpacked app
+        uses: actions/upload-artifact@v4
+        with:
+          name: cboinn-driver-scanner-win-unpacked
+          path: release-build/win-unpacked
+          if-no-files-found: error
